@@ -1,0 +1,115 @@
+<%- include('./layout/header.ejs') %>
+    <h2 class="mb-4">Groups
+    </h2>
+    <div class="container">
+
+        <!-- Modal -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroupModel">
+            Create Group
+        </button>
+        <% if(typeof message !=="undefined" ){ %>
+            <p style="color: green;" class="<% setTimeout(() => { %>d-flex<% }, 2000); %>">
+                <%= message %>
+            </p>
+            <% } %>
+                <!-- Modal -->
+                <div class="modal fade" id="createGroupModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Cretae Group</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <form action="/group" method="post" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <label class="text-dark"> Group Name : </label>
+                                    <input type="text" name="groupName" placeholder="Enter Group Name"
+                                        class=" ms-2 w-100 " required>
+                                    <label class="mt-2 w-100 text-dark">Select profile picture :</label>
+                                    <input type="file" name="image" placeholder="Select profile picture"
+                                        class=" ms-2 w-100" required>
+                                    <label class="mt-2 w-100 text-dark">Usre Limit :</label>
+                                    <input type="number" min="1" placeholder="Enter Usre Limit" name="limit"
+                                        class=" ms-2 w-100">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">cancel</button>
+                                    <button type="submit" class="btn btn-primary">Cretae Group</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="memberModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cretae Group</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <form action="/group" method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <label class="text-dark"> Group Name : </label>
+                                <input type="text" name="groupName" placeholder="Enter Group Name"
+                                    class=" ms-2 w-100 " required>
+                                <label class="mt-2 w-100 text-dark">Select profile picture :</label>
+                                <input type="file" name="image" placeholder="Select profile picture"
+                                    class=" ms-2 w-100" required>
+                                <label class="mt-2 w-100 text-dark">Usre Limit :</label>
+                                <input type="number" min="1" placeholder="Enter Usre Limit" name="limit"
+                                    class=" ms-2 w-100">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">cancel</button>
+                                <button type="submit" class="btn btn-primary">Cretae Group</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <td>S.No</td>
+                            <td>Image</td>
+                            <td>Name</td>
+                            <td>Limit</td>
+                            <td>Members</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <%if(groups.length > 0){
+                            groups.map((group, index) => {
+                            %>
+                            <tr>
+                                <td><%= index+1%></td>
+                                <td><img class="groupImg" src="<%=group.image%>" alt=""></td>
+                                <td><%= group.groupName %></td>
+                                <td><%= group.limit %></td>
+                                <td><a class="cursor-pointer addMember" data-id="" data-target="model" data-target="#memberModel">Members</a></td>
+                                <td>--*-**  </td>
+                            </tr>
+                        <% })}else{%>
+                            <td colspan="6" class="text-center py-5 ">
+                                <h2>No Groups Found</h2>
+                            </td>
+                        <%}%>
+                    </tbody>
+                    <tbody>
+
+                    </tbody>
+                </table>
+    </div>
+    <%- include('./layout/footer.ejs') %>

@@ -1,6 +1,8 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const imgUploading = require("../config/upload");
+const Chat = require("../models/Chat.model");
+const Group = require("../models/Group.model");
 exports.registerLoad = async (req, res) => {
     try {
         res.render("register");
@@ -48,6 +50,7 @@ exports.login = async (req, res) => {
             const isMatch = await bcrypt.compare(req.body.password, user.password);
             if (isMatch) {
                 req.session.user = user;
+                res.cookie("user", JSON.stringify(user))
                 res.redirect("/dashboard");
             }
             else {
@@ -79,9 +82,70 @@ exports.dashboardLoad = async (req, res) => {
 
 exports.logout = async (req, res) => {
     try {
+        res.clearCookie('user')
         req.session.destroy();
         res.redirect("/");
     } catch (err) {
         console.log(err);
+    }
+}
+
+exports.saveChat = async (req, res) => {
+    try {
+        const chat = new Chat({
+            senderId: req.body.sender_id,
+            receiverId: req.body.receiver_id,
+            message: req.body.message
+        })
+        const chatdata = await chat.save();
+        res.status(200).json({msg:"Chat saved successfully",success:true,data:chatdata});
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({msg:"somthing wrong",success:false});
+    }
+}
+
+exports.deleteChat = async (req, res) => {
+    try {
+        const chat = await Chat.deleteOne({_id:req.body.id});
+        res.status(200).json({msg:"Chat deleted successfully",success:true,data:chat});
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({msg:"somthing wrong",success:false});
+    }
+}
+
+
+exports.groupLoad = async (req, res) => {
+    try{
+
+        const groups = await Group.find({creater_id:req.session.user._id});
+        res.render("group",{groups : groups});
+    }catch(err)
+    {
+        console.log(err);
+    }
+}
+
+exports.createGroup = async (req, res) => {
+    try {
+        const imgURL = await imgUploading(req.file.buffer);
+
+        const userId = req.session.user
+
+        const group = new Group({
+            creater_id: userId._id,
+            groupName: req.body.groupName,
+            image: imgURL,
+            limit: req.body.limit
+        })
+        const groupdata = await group.save();
+
+        const groups = await Group.find({creater_id:req.session.user._id});
+
+        res.render('group',{message:"group created successfully" , groups : groups});
+    } catch (err) {
+        console.log(err);
+        res.render('group',{msg:"somthing wrong",success:false});
     }
 }

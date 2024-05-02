@@ -1,48 +1,76 @@
 <%- include('./layout/header.ejs') %>
-    <h2 class="mb-4">Hi, <%= user.name %></h2>
+    <h2 class="mb-4">Hi, <%= user.name %>
+    </h2>
     <div class="row">
         <div class="col-md-3">
-            
             <!-- List of Users -->
             <ul class="list-group">
-                <% if(users.length > 0){ %>
-                    <% for(let i = 0; i < users.length; i++){ %> 
-                        <li class="list-group-item list-grop-item-dark d-flex align-items-center user-list" style="cursor: pointer;">
-                            <img src="<%= users[i].image %>" alt="" width="50px" height="50px" class="mr-3 rounded-circle">
-                            <div>
-                                
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h5 class="mt-0 mb-1"><%= users[i].name %></h5>
+                <% if(users.length> 0){ %>
+                    <% for(let i=0; i < users.length; i++){ %>
+                        <li class="list-group-item list-group-item-dark d-flex align-items-center justify-content-between user-list"
+                            style="cursor: pointer;" data-id="<%= users[i]._id %>">
+                            <div class="d-flex align-items-center">
+                                <img src="<%= users[i].image %>" alt="" width="50px" height="50px"
+                                    class="mr-3 rounded-circle">
+                                <div>
+                                    <div class="media align-items-center text-end">
+                                        <div class="media-body">
+                                            <h5 class="mt-0 mb-1">
+                                                <%= users[i].name %>
+                                            </h5>
+                                        </div>
                                     </div>
+                                    <%= users[i].name %>
                                 </div>
-                                <%= users[i].name %>
                             </div>
-
+                            <% if(users[i].isOnline){ %>
+                                <p class="m-0 text-success d-block" id="<%= users[i]._id %>-status">
+                                    Online
+                                </p>
+                                <% } %>
                         </li>
-                    <% } %>
-                <% } %>
+                        <% } %>
+                            <% } %>
             </ul>
         </div>
         <div class="col-md-9">
             <h3 class="start-head">Click to Start the Chat</h3>
             <div class="chat-section">
                 <div id="chat-container">
+
                 </div>
-                <form action="" id="chat-form">
+                <form id="chat-form">
                     <input type="text" name="message" placeholder="Enter Message" id="message" class="border" required>
                     <input type="submit" value="Send message" class="btn btn-primary">
                 </form>
             </div>
         </div>
+    </div>
 
-        <script>
-            $(document).ready(()=>{
-                $('.user-list').click(()=>{
-                    $('.start-head').hide()
-                    $('.chat-section').show()
-                
-                })
-            })
-        </script>
-<%- include('./layout/footer.ejs') %>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">delete Chate</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="delete-chat-form" >
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="delete-message-id">
+                        <p>
+                            are you sure you want to delete below message?
+                        </p>
+                        <p><b id="delete-message"></b></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Delete</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <%- include('./layout/footer.ejs') %>
