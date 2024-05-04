@@ -27,7 +27,7 @@ npm install
 
 3. Start the server:
 ```sh
-    npm start
+npm start
 ```
 
 <h2>Usage</h2>
