@@ -13,7 +13,7 @@
                 <%= message %>
             </p>
             <% } %>
-                <!-- Modal -->
+                <!--Create Group Modal -->
                 <div class="modal fade" id="createGroupModel" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
@@ -45,36 +45,51 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="memberModel" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cretae Group</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <form action="/group" method="post" enctype="multipart/form-data">
-                            <div class="modal-body">
-                                <label class="text-dark"> Group Name : </label>
-                                <input type="text" name="groupName" placeholder="Enter Group Name"
-                                    class=" ms-2 w-100 " required>
-                                <label class="mt-2 w-100 text-dark">Select profile picture :</label>
-                                <input type="file" name="image" placeholder="Select profile picture"
-                                    class=" ms-2 w-100" required>
-                                <label class="mt-2 w-100 text-dark">Usre Limit :</label>
-                                <input type="number" min="1" placeholder="Enter Usre Limit" name="limit"
-                                    class=" ms-2 w-100">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">cancel</button>
-                                <button type="submit" class="btn btn-primary">Cretae Group</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                 <!-- Members Model -->
+                 <div class="modal fade" id="membersModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                 <div class="modal-dialog">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <h1 class="modal-title fs-5" id="exampleModalLabel">Cretae Group</h1>
+                             <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                 aria-label="Close"></button>
+                         </div>
+                         <form action="" id="add-member-form">
+                             <div class="modal-body">
+                                 <input type="hidden" name="gruop_id" id="group_id"
+                                     class=" ms-2 w-100 " required>
+                                 <input type="hidden" name="limit" id="group_limit" 
+                                     class=" ms-2 w-100" required>
+                                 <table class="table ">
+                                    <thead>
+                                        <th>Select</th>
+                                        <th>Name</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="addMemberTable">
+                                                    <table class="table addMemberInTable">
+
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                 </table>
+
+                             </div>
+                             <div class="modal-footer">
+                                <p id="add-member-error"></p>
+                                 <button type="button" class="btn btn-secondary"
+                                     data-bs-dismiss="modal">cancel</button>
+                                 <button type="submit" class="btn btn-primary">Update Members</button>
+                             </div>
+                         </form>
+                     </div>
+                 </div>
+             </div>
 
 
                 <table class="table mt-4">
@@ -98,7 +113,7 @@
                                 <td><img class="groupImg" src="<%=group.image%>" alt=""></td>
                                 <td><%= group.groupName %></td>
                                 <td><%= group.limit %></td>
-                                <td><a class="cursor-pointer addMember" data-id="" data-target="model" data-target="#memberModel">Members</a></td>
+                                <td><a class="cursor-pointer addMember" data-id="<%= group._id %>" data-limit="<%= group.limit %>" data-bs-toggle="modal" data-bs-target="#membersModel">Members</a></td>
                                 <td>--*-**  </td>
                             </tr>
                         <% })}else{%>

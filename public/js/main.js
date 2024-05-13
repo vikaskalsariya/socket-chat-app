@@ -173,3 +173,62 @@ $("#delete-chat-form").submit((e)=>{
 socket.on('deleteChatMessage',(id)=>{
 	$(`#${id}`).remove();
 })
+
+// add members js 
+$('.addMember').click(function(){
+	var id = $(this).attr('data-id')
+	var limit = $(this).attr('data-limit')
+
+	$("#group_id").val(id)
+	$("#group_limit").val(limit)
+
+	$.ajax({
+		url: '/getMembers',
+		type: 'POST',
+		data: {
+			group_id: id
+		},
+		success: (res) => {
+			if (res.success) {
+				let users = res.data
+				let html = ``;
+
+				users.map((v,i)=>{
+					html += `
+						<tr>
+							<td><input type="checkbox" name="members[]" value="${v._id}"/></td>
+							<td>${v.name}</td>
+						</tr>
+					`
+				})
+				$('.addMemberInTable').html(html)
+			} else {
+				alert(data.msg)
+			}
+		}
+	})
+})
+
+// add members 
+$("#add-member-form").submit(function(event){
+	event.preventDefault();
+	var formData = $(this).serialize();
+	console.log(formData)
+	$.ajax({
+		url: '/addMembers',
+        type: 'POST',
+        data: formData,
+        success: (res) => {
+			console.log(res)
+            if (res.success) {
+				$("#membersModel").modal('hide');
+				$("#add-member-form")[0].reset();
+            } else {
+                $("#add-member-error").text(res.msg)
+				setTimeout(()=>{
+					$("#add-member-error").text("")
+				},2000)
+            }
+        }
+	})
+})

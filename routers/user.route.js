@@ -12,7 +12,9 @@ const {
     saveChat,
     deleteChat,
     groupLoad,
-    createGroup
+    createGroup,
+    getMembers,
+    addMembers
 } = require("../controllers/user.ctrl");
 
 router.get("/register",isLogout,registerLoad)
@@ -25,5 +27,7 @@ router.post("/saveChat",saveChat)
 router.post("/deleteChat",deleteChat)
 router.get("/group",isLogin,groupLoad)
 router.post("/group",group.imgUpload,createGroup)
+router.post("/getMembers",isLogin,getMembers)
+router.post("/addMembers",isLogin,addMembers)
 
 module.exports = router;

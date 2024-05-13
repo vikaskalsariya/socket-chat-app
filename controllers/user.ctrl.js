@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const imgUploading = require("../config/upload");
 const Chat = require("../models/Chat.model");
 const Group = require("../models/Group.model");
+const Member = require("../models/Member.model");
 exports.registerLoad = async (req, res) => {
     try {
         res.render("register");
@@ -147,5 +148,41 @@ exports.createGroup = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.render('group',{msg:"somthing wrong",success:false});
+    }
+}
+
+exports.getMembers = async (req,res)=>{
+    try{
+        const members = await User.find({_id:{$nin:req.session.user._id}});
+        res.status(200).json({msg:"group members fetched successfully",success:true,data:members});
+    }catch(err){
+        console.log(err.message)
+        res.status(400).json({msg:"somthing wrong",success:false});
+    }
+}
+
+exports.addMembers = async(req,res)=>{
+    try{
+        if(!req.body.members)
+        {
+            res.status(200).json({msg:"please select members",success:false});
+        }
+        else if(req.body.members.length > req.body.limit)
+        {
+            res.status(200).json({msg:"please select less than "+req.body.limit,success:false});
+        }
+        else{
+            const members = req.body.members.map((v,i)=>{
+                return {
+                    group_id:req.body.group_id,
+                    user_id:v
+                }
+            })
+            const member = await Member.insertMany(members);
+            res.status(200).json({msg:"members added successfully",success:true,data:member});
+        }
+    }catch(err){
+        console.log(err.message)
+        res.status(400).json({msg:"somthing wrong",success:false});
     }
 }
