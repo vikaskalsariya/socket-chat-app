@@ -4,6 +4,7 @@ const imgUploading = require("../config/upload");
 const Chat = require("../models/Chat.model");
 const Group = require("../models/Group.model");
 const Member = require("../models/Member.model");
+const mongoose = require("mongoose")
 exports.registerLoad = async (req, res) => {
     try {
         res.render("register");
@@ -153,11 +154,41 @@ exports.createGroup = async (req, res) => {
 
 exports.getMembers = async (req,res)=>{
     try{
-        const members = await User.find({_id:{$nin:req.session.user._id}});
-        res.status(200).json({msg:"group members fetched successfully",success:true,data:members});
+ const members = await User.aggregate([
+    {
+        $lookup:{
+            from:"members",
+            localField:"_id",
+            foreignField:"user_id",
+            pipeline:[
+                {
+                    $match:{
+                        $expr:{
+                            $and:[
+                                {
+                                    $eq:["$groupId",new mongoose.Types.ObjectId(req.body.group_id)]
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            as:"members"
+        }
+    },{
+        $match:{
+            "_id":{
+                $nin:[ new mongoose.Types.ObjectId(req.session.user._id)]
+            }
+        }
+    }
+]);
+
+res.status(200).json({msg:"group members fetched successfully",success:true,data:members});
+
     }catch(err){
         console.log(err.message)
-        res.status(400).json({msg:"somthing wrong",success:false});
+        res.status(400).json({msg:"somthing wrong"+err.message,success:false});
     }
 }
 
@@ -172,9 +203,11 @@ exports.addMembers = async(req,res)=>{
             res.status(200).json({msg:"please select less than "+req.body.limit,success:false});
         }
         else{
+            await Member.deleteMany({groupId:req.body.gruop_id})
+            console.log('req.body.group_id', req.body.gruop_id)
             const members = req.body.members.map((v,i)=>{
                 return {
-                    group_id:req.body.group_id,
+                    groupId:req.body.gruop_id,
                     user_id:v
                 }
             })

@@ -109,12 +109,12 @@
                             groups.map((group, index) => {
                             %>
                             <tr>
-                                <td><%= index+1%></td>
-                                <td><img class="groupImg" src="<%=group.image%>" alt=""></td>
-                                <td><%= group.groupName %></td>
-                                <td><%= group.limit %></td>
-                                <td><a class="cursor-pointer addMember" data-id="<%= group._id %>" data-limit="<%= group.limit %>" data-bs-toggle="modal" data-bs-target="#membersModel">Members</a></td>
-                                <td>--*-**  </td>
+                                <td><div><%= index+1%></td></div>
+                                <td><div><img class="groupImg" src="<%=group.image%>" alt=""></td></div>
+                                <td><div><%= group.groupName %></td></div>
+                                <td><div><%= group.limit %></td></div>
+                                <td><div><a class="cursor-pointer addMember" data-id="<%= group._id %>" data-limit="<%= group.limit %>" data-bs-toggle="modal" data-bs-target="#membersModel">Members</a></td></div>
+                                <td><div>--*-**  </td></div>
                             </tr>
                         <% })}else{%>
                             <td colspan="6" class="text-center py-5 ">

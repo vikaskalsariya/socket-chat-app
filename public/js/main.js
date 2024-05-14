@@ -75,11 +75,13 @@ $('#chat-form').submit((e) => {
 				$('#message').val('');
 				var chat = res.data.message;
 				var html = `
-					<div class="current-user-chat ml-2" id=${res.data._id}>
-						<h5>${chat}
+				<div class="current-user-chat">
+					<div class="chat-box ml-2" id=${res.data._id}>
+						<h6>${chat}
 							<i class="fa fa-trash mx-1" aria-hidden="true" data-id="${res.data._id}" data-bs-toggle="modal" data-bs-target="#deleteModel"></i>
-						</h5>
+						</h6>
 					</div>
+				</div>
 				`;
 				$('#chat-container').append(html);
 				scrollChat()
@@ -94,10 +96,12 @@ $('#chat-form').submit((e) => {
 socket.on("loadNewChat", (data) => {
 	if (sender_id == data.receiverId && receiver_id == data.senderId) {
 		var html = `
-		<div class="distance-user-chat mx-1 mr-2" id=${data._id}>
-			<h5>
-				${data.message}
-			</h5>
+		<div class="distance-user-chat">
+			<div class="chat-box mx-1 mr-2" id=${data._id}>
+				<h6>
+					${data.message}
+				</h6>
+			</div>
 		</div>
 			`;
 		$('#chat-container').append(html);
@@ -114,19 +118,23 @@ socket.on("loadOldChat", (data) => {
 		if (sender_id == chat.senderId) {
 			// addClass = 'current-user-chat'
 			html += `
-			<div class="current-user-chat" id=${chat._id}>
-				<h5>${chat.message}
-					<i class="fa fa-trash mx-1" aria-hidden="true" data-id="${chat._id}" data-bs-toggle="modal" data-bs-target="#deleteModel"></i>
-				</h5>
+			<div class="current-user-chat">
+				<div class="chat-box" id=${chat._id}>
+					<h6>${chat.message}
+						<i class="fa fa-trash mx-1" aria-hidden="true" data-id="${chat._id}" data-bs-toggle="modal" data-bs-target="#deleteModel"></i>
+					</h6>
+				</div>
 			</div>
 			`
 		} else {
 			// addClass = 'distance-user-chat'
 			html += `
-			<div class="distance-user-chat mx-1" id=${chat._id}>
-				<h5>
-					${chat.message}
-				</h5>
+			<div class="distance-user-chat ">
+				<div class="chat-box mx-1" id=${chat._id}>
+					<h6>
+						${chat.message}
+					</h6>
+				</div>
 			</div>
 			`
 		}
@@ -194,9 +202,10 @@ $('.addMember').click(function(){
 				let html = ``;
 
 				users.map((v,i)=>{
+					let isMemberOfGroup = v.members.length > 0?true:false;
 					html += `
 						<tr>
-							<td><input type="checkbox" name="members[]" value="${v._id}"/></td>
+							<td><input type="checkbox" ${(isMemberOfGroup?"checked":"")} name="members[]" value="${v._id}"/></td>
 							<td>${v.name}</td>
 						</tr>
 					`
